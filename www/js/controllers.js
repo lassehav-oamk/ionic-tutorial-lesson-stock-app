@@ -1,13 +1,9 @@
 var app = angular.module('starter.controllers', []);
 
-app.controller('mainCtrl', function($scope, $state){
+app.controller('mainCtrl', function($scope, $state, stockData){
     $scope.name = "Pink Elefant";
 
-    $scope.stockData = [
-                        { name: "AAPL", value: 118 },
-                        { name: "MSFT", value: 60 },
-                        { name: "GOOG", value: 50 }
-                    ];
+    $scope.stockData = stockData.getSymbols();
 
     $scope.goToSearch = function()
     {
@@ -17,13 +13,19 @@ app.controller('mainCtrl', function($scope, $state){
 });
 
 
-app.controller('searchCtrl', function($scope, $http){
+app.controller('searchCtrl', function($scope, $http, stockData){
     $scope.name = "Blue Snake";
     $scope.input = {
         searchText: ""
     };
 
-    $scope.results = { name: "" };
+    $scope.results = { name: ""   
+                      };
+
+    $scope.followThis = function()
+    {
+        stockData.addSymbol($scope.input.searchText);
+    }
 
     $scope.executeSearch = function()
     {        
@@ -37,7 +39,29 @@ app.controller('searchCtrl', function($scope, $http){
             console.log(response.data.query.results.quote.Ask);
 
             // display the data to the user in the view
-            $scope.results.name = response.data.query.results.quote.Name;
+            $scope.results.name = response.data.query.results.quote.Name;        
         });                    
     }
 });
+
+app.factory('stockData', [function(){
+
+     var stockStorage = [
+                        { name: "AAPL", value: 118 },
+                        { name: "MSFT", value: 60 },
+                        { name: "GOOG", value: 50 }
+                    ];
+
+    return {
+        addSymbol: function(symbolName)
+        {
+            console.log("add symbol");
+            stockStorage.push({ name: symbolName, value: 0 });
+        },
+        getSymbols: function()
+        {
+            console.log("get symbols");
+            return stockStorage;
+        }
+    };
+}]);
