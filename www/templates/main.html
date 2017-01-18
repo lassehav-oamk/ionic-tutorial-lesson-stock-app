@@ -5,14 +5,14 @@
         </button>
     </ion-nav-buttons>
     <ion-content>
-        <div class="card">
+        <div class="card" ng-repeat="s in stockData">
             <div class="item item-text-wrap">
                 <div class="row">
                     <div class="col col-75">
-                        AAPL
+                        {{ s.name }}
                     </div>
                     <div class="col">
-                        118.56
+                        {{ s.value }}
                     </div>
                 </div>
             </div>
