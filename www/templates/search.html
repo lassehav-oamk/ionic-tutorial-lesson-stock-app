@@ -7,11 +7,11 @@
             </label>
         </div>
 
-        <div class="list">
+        <div class="list" ng-show="input.searchText.length > 0">
             <div class="item item-button-right">
                 {{ results.name }}
-                <button class="button button-positive">
-                <i class="icon ion-ios-plus-outline"></i>
+                <button class="button button-positive" ng-click="blah()">
+                    <i class="icon ion-ios-plus-outline"></i>
                 </button>
             </div>
         </div>

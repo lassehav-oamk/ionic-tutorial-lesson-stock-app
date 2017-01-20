@@ -1,13 +1,8 @@
 var app = angular.module('starter.controllers', []);
 
-app.controller('mainCtrl', function($scope, $state){
-    $scope.name = "Pink Elefant";
-
-    $scope.stockData = [
-                        { name: "AAPL", value: 118 },
-                        { name: "MSFT", value: 60 },
-                        { name: "GOOG", value: 50 }
-                    ];
+app.controller('mainCtrl', function($scope, $state, stockDataStorage){
+    
+    $scope.stockData = stockDataStorage.getFollowedStocks();
 
     $scope.goToSearch = function()
     {
@@ -16,9 +11,8 @@ app.controller('mainCtrl', function($scope, $state){
     }
 });
 
-
-app.controller('searchCtrl', function($scope, $http){
-    $scope.name = "Blue Snake";
+app.controller('searchCtrl', function($scope, $http, stockDataStorage, $state){
+    
     $scope.input = {
         searchText: ""
     };
@@ -38,6 +32,36 @@ app.controller('searchCtrl', function($scope, $http){
 
             // display the data to the user in the view
             $scope.results.name = response.data.query.results.quote.Name;
+            $scope.results.symbol = response.data.query.results.quote.Symbol;
+            $scope.results.value = response.data.query.results.quote.LastTradePriceOnly;
         });                    
     }
+
+    $scope.blah = function()
+    {
+        stockDataStorage.addStockSymbol($scope.results.symbol, $scope.results.value);
+        $state.go('main');
+    }
+});
+
+app.factory('stockDataStorage', function(){
+
+    var storage = [
+                    { name: "AAPL", value: 118 },
+                    { name: "MSFT", value: 60 },
+                    { name: "GOOG", value: 50 }
+                ];
+
+    return {
+        addStockSymbol: function(symbol, symbolValue)
+        {
+            console.log("addStockSymbol " + symbol);
+            storage.push({ name: symbol, value: symbolValue });
+        },
+        getFollowedStocks: function()
+        {
+            console.log("getFollowedStocks");
+            return storage;
+        }
+    };
 });
